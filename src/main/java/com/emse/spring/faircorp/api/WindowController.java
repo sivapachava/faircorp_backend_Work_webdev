@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/windows") // (2)
 @Transactional // (3)
 
+
+
 public class WindowController {
     private final WindowDao windowDao;
     private final RoomDao roomDao;

@@ -17,23 +17,28 @@ public class RoomDto {
     private Long buildingId;
 
     private List<HeaterDto> heaters;
+    private  List<WindowDto> windows;
 
     public RoomDto() {
     }
 
     public RoomDto(Room room) {
-        this.name = room.getName();
         this.id = room.getId();
-        this.currentTemperature = room.getCurrentTemperature();
-        this.buildingId = room.getBuilding().getId();
+        this.name = room.getName();
         this.floor = room.getFloor();
+        this.currentTemperature = room.getCurrentTemperature();
         this.targetTemperature = room.getTargetTemperature();
+        this.buildingId = room.getBuilding().getId();
         this.heaters = Optional.ofNullable(room.getHeaters())
                 .orElse(List.of())
                 .stream()
                 .map(HeaterDto::new)
                 .toList();
-
+        this.windows = Optional.ofNullable(room.getWindows())
+                .orElse(List.of()).
+                stream().
+                map(WindowDto::new)
+                .toList();
     }
 
     public Long getBuildingId() {
@@ -91,5 +96,11 @@ public class RoomDto {
 
     public void setHeaters(List<HeaterDto> heaters) {
         this.heaters = heaters;
+    }
+
+    public List<WindowDto> getWindows() {return windows;}
+
+    public void setWindows(List<WindowDto> windows) {
+        this.windows = windows;
     }
 }
