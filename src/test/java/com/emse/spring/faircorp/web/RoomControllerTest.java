@@ -49,6 +49,10 @@ public class RoomControllerTest {
 
     int floor;
 
+    double currentTemperature;
+
+    double targetTemperature;
+
     @Test
     void shouldLoadRooms() throws Exception {
         given(roomDao.findAll()).willReturn(List.of(
@@ -123,6 +127,6 @@ public class RoomControllerTest {
     }
 
     private Room createRoom(String name) {
-        return new Room(name, floor, building);
+        return new Room(name, floor, currentTemperature, targetTemperature, building);
     }
 }

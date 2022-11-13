@@ -127,7 +127,7 @@ public class HeaterControllerTest {
     }
 
     private Heater createHeater(String name) {
-        Room room = new Room("S1", 1, building);
+        Room room = new Room("S1", 1, 1, 1, building);
         return new Heater(name, room, HeaterStatus.ON);
     }
 
