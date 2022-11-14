@@ -35,29 +35,13 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 public class WindowControllerTest {
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private ObjectMapper objectMapper;
-
     @MockBean
     private WindowDao windowDao;
-
     @MockBean
     private RoomDao roomDao;
-
     Building building;
-
-    @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
-    void shouldLoadAWindowAndReturnNullIfNotFound() throws Exception {
-        given(windowDao.findById(999L)).willReturn(Optional.empty());
-
-        mockMvc.perform(get("/api/windows/999").accept(APPLICATION_JSON))
-                // check the HTTP response
-                .andExpect(status().isOk())
-                // the content can be tested with Json path
-                .andExpect(content().string(""));
-    }
 
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")
@@ -73,7 +57,6 @@ public class WindowControllerTest {
                 // the content can be tested with Json path
                 .andExpect(jsonPath("[*].name").value(containsInAnyOrder("window 1", "window 2")));
     }
-
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")
     void shouldLoadAWindow() throws Exception {
@@ -85,7 +68,17 @@ public class WindowControllerTest {
                 // the content can be tested with Json path
                 .andExpect(jsonPath("$.name").value("window 1"));
     }
+    @Test
+    @WithMockUser(username = "admin", roles = "ADMIN")
+    void shouldLoadAWindowAndReturnNullIfNotFound() throws Exception {
+        given(windowDao.findById(999L)).willReturn(Optional.empty());
 
+        mockMvc.perform(get("/api/windows/999").accept(APPLICATION_JSON))
+                // check the HTTP response
+                .andExpect(status().isOk())
+                // the content can be tested with Json path
+                .andExpect(content().string(""));
+    }
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")
     void shouldSwitchWindow() throws Exception {
@@ -101,7 +94,6 @@ public class WindowControllerTest {
                 .andExpect(jsonPath("$.name").value("window 1"))
                 .andExpect(jsonPath("$.windowStatus").value("CLOSED"));
     }
-
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")
     void shouldCreateWindow() throws Exception {
@@ -117,14 +109,12 @@ public class WindowControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("window 3"));
     }
-
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")
     void shouldDeleteWindow() throws Exception {
         mockMvc.perform(delete("/api/windows/999").with(csrf()))
                 .andExpect(status().isOk());
     }
-
     private Window createWindow(String name) {
 
         Room room = new Room("S1", 1, 1, 1, building);

@@ -16,28 +16,22 @@ import java.util.List;
 public class BuildingDaoTest {
 
     @Autowired BuildingDao buildingDao;
-
     @Test
     public void ShouldFindABuilding(){
         Building building =buildingDao.getReferenceById(-10L);
         Assertions.assertThat(building.getId()).isEqualTo(-10L);
         Assertions.assertThat(building.getName()).isEqualTo("Building 1");
-
     }
-
     @Test
     public void shouldFindAllBuilding() {
         List<Building> buildings = buildingDao.findAll();
         Assertions.assertThat(buildings.size()).isEqualTo(3);
-
     }
-
     @Test
     public void ShouldCreateBuilding() {
         Building newBuilding = new Building();
         newBuilding.setName("Test");
         Building building = buildingDao.save(newBuilding);
         Assertions.assertThat(newBuilding.getName()).isEqualTo(building.getName());
-
     }
 }

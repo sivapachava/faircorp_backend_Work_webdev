@@ -18,10 +18,8 @@ class RoomDaoTest {
 
     @Autowired
     private RoomDao roomDao;
-
     @Autowired
     private BuildingDao buildingDao;
-
     @Test
     public void shouldFindARoom() {
         Room room = roomDao.getOne(-10L);
@@ -30,19 +28,16 @@ class RoomDaoTest {
         Assertions.assertThat(room.getCurrentTemperature()).isEqualTo(22.3);
         Assertions.assertThat(room.getTargetTemperature()).isEqualTo(20.0);
     }
-
     @Test
     public void ShouldFindARoomByName() {
         Optional<Room> result = roomDao.findRoomByName("Room1");
         Assertions.assertThat(result).isNotEmpty();
     }
-
     @Test
     public void ShouldNotFindARoomByName() {
         Optional<Room> result = roomDao.findRoomByName("NOTARoom1");
         Assertions.assertThat(result).isEmpty();
     }
-
     @Test
     public void ShouldCreateARoom() {
         Building building = buildingDao.getReferenceById(-10l);

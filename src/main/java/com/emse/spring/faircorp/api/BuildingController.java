@@ -1,6 +1,5 @@
 package com.emse.spring.faircorp.api;
 
-
 import com.emse.spring.faircorp.dao.BuildingDao;
 import com.emse.spring.faircorp.dto.BuildingDto;
 import com.emse.spring.faircorp.model.Building;
@@ -16,26 +15,21 @@ import java.util.stream.Collectors;
 @Transactional
 
 public class BuildingController {
-
     @Autowired
     private BuildingDao buildingDao;
-
     @GetMapping // (5)
     public List<BuildingDto> findAll() {
         return buildingDao.findAll().stream().map(BuildingDto::new).collect(Collectors.toList());  // (6)
     }
-
     @GetMapping(path = "/{id}")
     public BuildingDto findById(@PathVariable Long id) {
         return buildingDao.findById(id).map(BuildingDto::new).orElse(null); // (7)
     }
-
     @DeleteMapping(path = "/{id}")
     public void delete(@PathVariable Long id) {
         buildingDao.deleteById(id);
     }
-
-    @PostMapping(path = "/")
+    @PostMapping
     public BuildingDto create(@RequestBody BuildingDto dto) {
         Building building;
         if (dto.getId() == null) {

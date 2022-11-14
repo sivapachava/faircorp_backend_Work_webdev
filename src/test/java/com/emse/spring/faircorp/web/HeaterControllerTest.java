@@ -87,6 +87,8 @@ public class HeaterControllerTest {
                 .andExpect(jsonPath("$.name").value("heater 1"));
     }
 
+
+
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")
     void shouldSwitchHeater() throws Exception {
@@ -103,6 +105,7 @@ public class HeaterControllerTest {
                 .andExpect(jsonPath("$.heaterStatus").value("OFF"));
     }
 
+
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")
     void shouldCreateHeater() throws Exception {
@@ -117,23 +120,6 @@ public class HeaterControllerTest {
                 // check the HTTP response
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("heater 1"));
-    }
-
-    @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
-    void shouldUpdateHeater() throws Exception {
-        Heater expectedHeater = createHeater("heater 1");
-        expectedHeater.setId(-10L);
-        String json = objectMapper.writeValueAsString(new HeaterDto(expectedHeater));
-
-        given(roomDao.getReferenceById(anyLong())).willReturn(expectedHeater.getRoom());
-        given(heaterDao.getReferenceById(anyLong())).willReturn(expectedHeater);
-
-        mockMvc.perform(post("/api/heaters").content(json).contentType(APPLICATION_JSON_VALUE))
-                // check the HTTP response
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("heater 1"))
-                .andExpect(jsonPath("$.id").value("-10"));
     }
 
     @Test

@@ -18,18 +18,14 @@ import java.util.stream.Collectors;
 class HeaterDaoTest {
     @Autowired
     private HeaterDao heaterDao;
-
     @Autowired
     private RoomDao roomDao;
-
     @Test
     public void shouldFindAHeater() {
         Heater heater = heaterDao.getOne(-10L);
         Assertions.assertThat(heater.getName()).isEqualTo("Heater1");
         Assertions.assertThat(heater.getHeaterStatus()).isEqualTo(HeaterStatus.ON);
-
     }
-
     @Test
     public void shouldDeleteHeaterInRoom() {
         Room room = roomDao.getReferenceById(-10L);
@@ -39,7 +35,6 @@ class HeaterDaoTest {
         List<Heater> result = heaterDao.findAllById(heaterIds);
         Assertions.assertThat(result).isEmpty();
     }
-
     @Test
     public void ShouldCreateHeater() {
         Room room = roomDao.getReferenceById(-10l);

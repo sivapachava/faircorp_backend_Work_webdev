@@ -15,7 +15,6 @@ import java.util.List;
 @Transactional // (3)
 public class AdressController {
     private final AdressSearchService address;
-
     public AdressController(AdressSearchService address){
         this.address = address;
     }

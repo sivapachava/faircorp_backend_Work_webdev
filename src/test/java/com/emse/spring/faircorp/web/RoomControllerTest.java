@@ -9,7 +9,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Optional;
+import java.util.Set;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -26,6 +30,7 @@ public class RoomControllerTest {
     private RoomDao roomDao;
 
     Building building;
+    private Room room;
 
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")
@@ -77,5 +82,16 @@ public class RoomControllerTest {
         mockMvc.perform(delete("/api/rooms/-8").accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = "ADMIN")
+    void shouldSwitchHeaterStatus() throws Exception {
+        Optional<Room> optRoom = roomDao.findById(-10L);
+        Room room = optRoom.get();
+        mockMvc.perform(put("/api/rooms/-10/switchHeater").with(csrf()).accept(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                //.andExpect(jsonPath("$.id").value(-10L))
+                .andExpect(jsonPath("$.heaterStatus").value(room.getHeaters().get(1).getHeaterStatus()== HeaterStatus.ON ? "OFF" : "ON"));
     }
 }
