@@ -61,13 +61,13 @@ public class WindowControllerTest {
 
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")
-    void shouldLoadAWindows() throws Exception{
-    given(windowDao.findAll()).willReturn(List.of(
-            createWindow("window 1"),
-            createWindow("window 2")
-    ));
+    void shouldLoadWindows() throws Exception {
+        given(windowDao.findAll()).willReturn(List.of(
+                createWindow("window 1"),
+                createWindow("window 2")
+        ));
 
-        mockMvc.perform(get("/api/windows/999").accept(APPLICATION_JSON))
+        mockMvc.perform(get("/api/windows").accept(APPLICATION_JSON))
                 // check the HTTP response
                 .andExpect(status().isOk())
                 // the content can be tested with Json path
@@ -104,23 +104,6 @@ public class WindowControllerTest {
 
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")
-    void shouldUpdateWindow() throws Exception {
-        Window expectedWindow = createWindow("window 1");
-        expectedWindow.setId(1L);
-        String json = objectMapper.writeValueAsString(new WindowDto(expectedWindow));
-
-        given(roomDao.getReferenceById(anyLong())).willReturn(expectedWindow.getRoom());
-        given(windowDao.getReferenceById(anyLong())).willReturn(expectedWindow);
-
-        mockMvc.perform(post("/api/windows").with(csrf()).content(json).contentType(APPLICATION_JSON))
-                // check the HTTP response
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("window 1"))
-                .andExpect(jsonPath("$.id").value("1"));
-    }
-
-    @Test
-    @WithMockUser(username = "admin", roles = "ADMIN")
     void shouldCreateWindow() throws Exception {
         Window expectedWindow = createWindow("window 3");
         expectedWindow.setId(null);
@@ -142,7 +125,8 @@ public class WindowControllerTest {
                 .andExpect(status().isOk());
     }
 
-    private  Window createWindow(String name) {
+    private Window createWindow(String name) {
+
         Room room = new Room("S1", 1, 1, 1, building);
         return new Window(name, WindowStatus.OPEN, room);
     }

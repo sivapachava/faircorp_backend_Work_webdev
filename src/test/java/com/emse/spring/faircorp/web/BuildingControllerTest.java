@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -23,6 +24,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -35,17 +37,14 @@ public class BuildingControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
-    private HeaterDao heaterDao;
 
-    @MockBean
-    private RoomDao roomDao;
 
     @MockBean
     private BuildingDao buildingDao;
     Long id;
 
     @Test
+    @WithMockUser(username = "admin", roles = "ADMIN")
     void shouldLoadBuildings() throws Exception {
         given(buildingDao.findAll()).willReturn(List.of(
                 createBuilding("building 1"),
@@ -60,6 +59,7 @@ public class BuildingControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = "ADMIN")
     void shouldLoadABuildingAndReturnNullIfNotFound() throws Exception {
         given(buildingDao.findById(999L)).willReturn(Optional.empty());
 
@@ -71,6 +71,7 @@ public class BuildingControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = "ADMIN")
     void shouldLoadABuilding() throws Exception {
         given(buildingDao.findById(999L)).willReturn(Optional.of(createBuilding("building 1")));
 
@@ -82,43 +83,29 @@ public class BuildingControllerTest {
     }
 
     @Test
-    void shouldUpdateBuilding() throws Exception {
-        Building expectedBuilding = createBuilding("building 1");
-        expectedBuilding.setId(1L);
-        String json = objectMapper.writeValueAsString(new BuildingDto(expectedBuilding));
-
-        //given(roomDao.getReferenceById(anyLong())).willReturn(expectedBuilding.getRoom());
-        given(buildingDao.getReferenceById(anyLong())).willReturn(expectedBuilding);
-
-        mockMvc.perform(post("/api/buildings").content(json).contentType(APPLICATION_JSON_VALUE))
-                // check the HTTP response
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("building 1"))
-                .andExpect(jsonPath("$.id").value("1"));
-    }
-
-    @Test
+    @WithMockUser(username = "admin", roles = "ADMIN")
     void shouldCreateBuilding() throws Exception {
         Building expectedBuilding = createBuilding("building 1");
         expectedBuilding.setId(null);
         String json = objectMapper.writeValueAsString(new BuildingDto(expectedBuilding));
 
-        //given(buildingDao.getReferenceById(anyLong())).willReturn(expectedBuilding.getBuilding());
         given(buildingDao.save(any())).willReturn(expectedBuilding);
 
-        mockMvc.perform(post("/api/buildings").content(json).contentType(APPLICATION_JSON_VALUE))
+        mockMvc.perform(post("/api/buildings/999").with(csrf()).content(json).contentType(APPLICATION_JSON_VALUE))
                 // check the HTTP response
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("building 1"));
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = "ADMIN")
     void shouldDeleteBuilding() throws Exception {
-        mockMvc.perform(delete("/api/buildings/999"))
+        mockMvc.perform(delete("/api/buildings/999").with(csrf()))
                 .andExpect(status().isOk());
     }
 
     private Building createBuilding(String name) {
+
         return new Building(name);
     }
 

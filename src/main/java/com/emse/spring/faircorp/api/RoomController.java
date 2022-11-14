@@ -60,9 +60,9 @@ public class RoomController {
         return roomDao.findById(id).map(RoomDto::new).orElse(null); // (7)
     }
 
-    @DeleteMapping(path = "/{id}")
-    public void delete(@PathVariable Long id) {
-        roomDao.deleteById(id);
+    @DeleteMapping(path = "/{room_id}")
+    public void delete(@PathVariable Long room_id) {
+        roomDao.deleteById(room_id);
     }
 
     @PutMapping(path = "/{id}/switchWindow")

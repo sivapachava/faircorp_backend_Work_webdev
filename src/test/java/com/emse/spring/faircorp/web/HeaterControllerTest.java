@@ -10,6 +10,7 @@ import com.emse.spring.faircorp.model.Heater;
 import com.emse.spring.faircorp.model.HeaterStatus;
 import com.emse.spring.faircorp.model.Room;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -88,19 +89,18 @@ public class HeaterControllerTest {
 
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")
-    void shouldUpdateHeater() throws Exception {
+    void shouldSwitchHeater() throws Exception {
         Heater expectedHeater = createHeater("heater 1");
-        expectedHeater.setId(1L);
-        String json = objectMapper.writeValueAsString(new HeaterDto(expectedHeater));
+        Assertions.assertThat(expectedHeater.getHeaterStatus()).isEqualTo(HeaterStatus.ON);
 
-        given(roomDao.getReferenceById(anyLong())).willReturn(expectedHeater.getRoom());
-        given(heaterDao.getReferenceById(anyLong())).willReturn(expectedHeater);
+        given(heaterDao.findById(999L)).willReturn(Optional.of(expectedHeater));
 
-        mockMvc.perform(post("/api/heaters").content(json).contentType(APPLICATION_JSON_VALUE))
+        mockMvc.perform(put("/api/heaters/999/switch").with(csrf()).accept(APPLICATION_JSON))
+
                 // check the HTTP response
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("heater 1"))
-                .andExpect(jsonPath("$.id").value("1"));
+                .andExpect(jsonPath("$.heaterStatus").value("OFF"));
     }
 
     @Test
@@ -117,6 +117,23 @@ public class HeaterControllerTest {
                 // check the HTTP response
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("heater 1"));
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = "ADMIN")
+    void shouldUpdateHeater() throws Exception {
+        Heater expectedHeater = createHeater("heater 1");
+        expectedHeater.setId(-10L);
+        String json = objectMapper.writeValueAsString(new HeaterDto(expectedHeater));
+
+        given(roomDao.getReferenceById(anyLong())).willReturn(expectedHeater.getRoom());
+        given(heaterDao.getReferenceById(anyLong())).willReturn(expectedHeater);
+
+        mockMvc.perform(post("/api/heaters").content(json).contentType(APPLICATION_JSON_VALUE))
+                // check the HTTP response
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("heater 1"))
+                .andExpect(jsonPath("$.id").value("-10"));
     }
 
     @Test
