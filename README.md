@@ -62,11 +62,7 @@ Credentials for users:
 * Role **USER**
     * username: user
     * password: userPassword
-<<<<<<< HEAD
 
 * To test end-points by using following link [Swagger](http://localhost:8080/swagger-ui/index.html#/)
-=======
-   
-*To test end-points by using following link [Swagger](http://localhost:8080/swagger-ui/index.html#/)
->>>>>>> 59621690e1eaf2970da729fc22e53aa173ee447e
+
 
