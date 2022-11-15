@@ -62,5 +62,6 @@ Credentials for users:
 * Role **USER**
     * username: user
     * password: userPassword
+   
 *To test end-points by using following link [Swagger](http://localhost:8080/swagger-ui/index.html#/)
 
