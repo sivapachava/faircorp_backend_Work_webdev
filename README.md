@@ -27,12 +27,12 @@ My development includes,
 
 | HTTP method | URL | Comment |
 |--|--|--|
-| **GET** | /api/rooms | returns a list of all rooms|
-| **GET** | /api/rooms/{id} | returns a specific room by id|
+| **GET** | /api/rooms | returns a list of all rooms with all the heaters and windows have in that rooms |
+| **GET** | /api/rooms/{id} | returns a specific room by id with all the heaters and windows have in that room|
 | **POST** | /api/rooms | creates a new room |
-| **DELETE** | /api/rooms/{id} | deletes a specificcroom by id|
-| **PUT** | /api/rooms/{id}/switch-heater | changes a specific heater status by id in room, if it was ON it will turn OFF or if it was OFF it will turn ON|
-| **PUT** | /api/rooms/{id}/switch-window | changes a specific window status by id in room, if it was in OPEN it will CLOSED or if it was in CLOSED it will OPEN|
+| **DELETE** | /api/rooms/{id} | deletes a specific room by id|
+| **PUT** | /api/rooms/{id}/switch-heater | changes a specific heater status by id in that room, if it was ON it will turn OFF or if it was OFF it will turn ON|
+| **PUT** | /api/rooms/{id}/switch-window | changes a specific window status by id in that room, if it was in OPEN it will CLOSED or if it was in CLOSED it will OPEN|
 
 ## window-controller (User with admin role)
 
@@ -63,6 +63,7 @@ Credentials for users:
     * username: user
     * password: userPassword
 
-* To test end-points by using following link [Swagger](http://localhost:8080/swagger-ui/index.html#/)
+* To test end-points by using following link [Swagger](http://faircorp-application-sivaratnam.cleverapps.io/swagger-ui/index.html#/) and in [localhost](http://localhost:8080/swagger-ui/index.html)
+* Final application is hosted at [faircorp](https://faircorp-application-sivaratnam.cleverapps.io)
 
 
